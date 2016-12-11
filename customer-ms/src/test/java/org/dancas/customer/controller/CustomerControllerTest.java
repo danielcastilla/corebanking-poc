@@ -1,0 +1,66 @@
+package org.dancas.customer.controller;
+
+import static org.hamcrest.CoreMatchers.any;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.dancas.customer.payload.Customer;
+import org.dancas.customer.service.CustomerService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(CustomerController.class)
+public class CustomerControllerTest {
+
+private static final String CUSTOMER_JSON = "{ \"name\":\"Jose\", \"surname\":\"Fernandez\", \"age\":\"30\"}";
+
+@Autowired
+private MockMvc mvc;
+
+@MockBean
+private CustomerService customerService;
+
+@Test
+public void whenNewCustomer_isCreatedWithUniqueId() throws Exception{
+	
+	when(customerService.create(any()))
+		.thenReturn(new Customer().setId("1").setName("Jose"));
+	
+	mvc.perform(
+			post("/v1/customer")
+				.accept(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(CUSTOMER_JSON))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id").isNotEmpty())
+			.andExpect(jsonPath("$.name").value("Jose"));
+			
+	}
+
+@Test
+public void whenExistingCustomer_isReturned() throws Exception{
+	
+	when(customerService.getById(any()))
+		.thenReturn(new Customer().setId("1"));
+	
+	mvc.perform(
+			get("/v1/customer/10")
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.contentType(MediaType.APPLICATION_JSON))
+	.andExpect(status().isOk())	
+	.andExpect(jsonPath("$.id").value("1"));
+	
+}
+	
+}
