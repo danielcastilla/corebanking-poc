@@ -1,5 +1,7 @@
 package org.dancas.customer.service.impl;
 
+import java.util.List;
+
 import org.dancas.customer.payload.Customer;
 import org.dancas.customer.repository.CustomerRepository;
 import org.dancas.customer.service.CustomerService;
@@ -22,7 +24,18 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepository.findOne(id);
 	}
 
+	@Override
+	public String deleteById(String id) {
+		customerRepository.delete(id);
+		return id;
+	}
+
+	@Override
+	public List<Customer> getAll() {
+		return customerRepository.findAll();
+	}
 	
 	
+
 	
 }

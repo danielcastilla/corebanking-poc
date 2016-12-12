@@ -1,12 +1,15 @@
 package org.dancas.customer.controller;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.awt.List;
+import java.util.ArrayList;
 
 import org.dancas.customer.payload.Customer;
 import org.dancas.customer.service.CustomerService;
@@ -48,19 +51,47 @@ public void whenNewCustomer_isCreatedWithUniqueId() throws Exception{
 			
 	}
 
-@Test
-public void whenExistingCustomer_isReturned() throws Exception{
-	
-	when(customerService.getById(any()))
-		.thenReturn(new Customer().setId("1"));
-	
-	mvc.perform(
-			get("/v1/customer/10")
-			.accept(MediaType.APPLICATION_JSON_UTF8)
-			.contentType(MediaType.APPLICATION_JSON))
-	.andExpect(status().isOk())	
-	.andExpect(jsonPath("$.id").value("1"));
-	
-}
+	@Test
+	public void whenExistingCustomer_isReturned() throws Exception{
+		
+		when(customerService.getById(any()))
+			.thenReturn(new Customer().setId("1"));
+		
+		mvc.perform(
+				get("/v1/customer/10")
+				.accept(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())	
+		.andExpect(jsonPath("$.id").value("1"));
+		
+	}
+
+	@Test
+	public void whenExistingCustomer_isDeleted() throws Exception{
+		when(customerService.deleteById(any()))
+			.thenReturn(new String("1"));
+		
+		mvc.perform(
+				delete("/v1/customer/1")
+				.accept(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
+	}
+
+	@Test
+	public void whenExistingCustomer_returnAll() throws Exception{
+		
+		when(customerService.getAll())
+			.thenReturn(new ArrayList<Customer>());
+			
+		mvc.perform(
+				get("v1/customer/")
+				.accept(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+			
+		
+		
+	}
 	
 }

@@ -1,5 +1,7 @@
 package org.dancas.customer.controller;
 
+import java.util.List;
+
 import org.dancas.customer.payload.Customer;
 import org.dancas.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +24,20 @@ public class CustomerController {
 		return new ResponseEntity<Customer>(customerService.create(customer), HttpStatus.CREATED);
 	}
 	
-	
 	@RequestMapping(value="{id}", method=RequestMethod.GET)
-	public Customer getById(@PathVariable String id){
-		return customerService.getById(id);
+	public ResponseEntity<Customer> getById(@PathVariable String id){
+		return new ResponseEntity<Customer>(customerService.getById(id), HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<List<Customer>> getAll(){
+		List<Customer> customers =  customerService.getAll();
+		return new ResponseEntity<List<Customer>> (customers, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="{id}", method=RequestMethod.DELETE)
+	public ResponseEntity deleteById(@PathVariable String id){		
+		return new ResponseEntity (customerService.deleteById(id), HttpStatus.OK);
 	}
 	
 }
