@@ -1,5 +1,6 @@
 package org.dancas.customer.controller;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -8,8 +9,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.awt.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.dancas.customer.payload.Customer;
 import org.dancas.customer.service.CustomerService;
@@ -81,14 +83,22 @@ public void whenNewCustomer_isCreatedWithUniqueId() throws Exception{
 	@Test
 	public void whenExistingCustomer_returnAll() throws Exception{
 		
+		List<Customer> customers = Arrays.asList(
+				new Customer("1", "Daniel", "Fernandez", "30"),
+				new Customer("2", "Jose", "Fernandez", "40"));
+		
 		when(customerService.getAll())
-			.thenReturn(new ArrayList<Customer>());
+			.thenReturn(customers);
 			
 		mvc.perform(
-				get("v1/customer/")
+				get("/v1/customer")
 				.accept(MediaType.APPLICATION_JSON_UTF8)
 				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id", is("1")))
+            .andExpect(jsonPath("$[0].name", is("Daniel")))
+            .andExpect(jsonPath("$[1].id", is("2")))
+            .andExpect(jsonPath("$[1].name", is("Jose")));
 			
 		
 		

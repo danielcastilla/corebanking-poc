@@ -13,6 +13,14 @@ public class Customer{
 	public Customer(){
 	}
 		
+	public Customer(String id, String name, String surname, String age) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.surname = surname;
+		this.age = age;
+	}
+
 	public String getId() {
 		return id;
 	}
