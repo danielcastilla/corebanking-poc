@@ -1,9 +1,8 @@
-package org.dancas.customer.controller;
+package org.dancas.product.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
-import org.dancas.customer.payload.Customer;
-import org.dancas.customer.service.CustomerService;
+import org.dancas.product.payload.Product;
+import org.dancas.product.service.ProductService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,80 +23,66 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(CustomerController.class)
-public class CustomerControllerTest {
+@WebMvcTest(ProductController.class)
+public class ProductControllerTest {
 
-private static final String CUSTOMER_JSON = "{ \"name\":\"Jose\", \"surname\":\"Fernandez\", \"age\":\"30\"}";
+	private static final String PRODUCT_JSON = "{ \"id\":\"1\", \"name\":\"Cards\", \"description\":\"Product Card Description\"}";
 
 	@Autowired
 	private MockMvc mvc;
 	
 	@MockBean
-	private CustomerService customerService;
-
+	private ProductService productService;
+	
 	@Test
-	public void whenNewCustomer_isCreatedWithUniqueId() throws Exception{
+	public void whenNewProduct_isCreatedWithUniqueId() throws Exception{
 		
-		when(customerService.create(any()))
-			.thenReturn(new Customer().setId("1").setName("Jose"));
+		when(productService.create(any()))
+			.thenReturn(new Product().setId("1").setName("Cards"));
 		
 		mvc.perform(
-				post("/v1/customer")
+				post("/v1/product")
 					.accept(MediaType.APPLICATION_JSON_UTF8)
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(CUSTOMER_JSON))
+					.content(PRODUCT_JSON))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.id").isNotEmpty())
-				.andExpect(jsonPath("$.name").value("Jose"));
-				
+				.andExpect(jsonPath("$.name").value("Cards"));
 	}
-
+	
 	@Test
-	public void whenExistingCustomer_isReturned() throws Exception{
+	public void whenExistingProduct_isReturned() throws Exception{
 		
-		when(customerService.getById(any()))
-			.thenReturn(new Customer().setId("1"));
+		when(productService.getById(any()))
+			.thenReturn(new Product().setId("1"));
 		
 		mvc.perform(
-				get("/v1/customer/10")
+				get("/v1/product/1")
 				.accept(MediaType.APPLICATION_JSON_UTF8)
 				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())	
 		.andExpect(jsonPath("$.id").value("1"));
-		
 	}
-
+	
 	@Test
-	public void whenExistingCustomer_isDeleted() throws Exception{
-		when(customerService.deleteById(any()))
-			.thenReturn(new String("1"));
+	public void whenExistingProducts_returnAll() throws Exception{
 		
-		mvc.perform(
-				delete("/v1/customer/1")
-				.accept(MediaType.APPLICATION_JSON_UTF8)
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
-	}
-
-	@Test
-	public void whenExistingCustomer_returnAll() throws Exception{
+		List<Product> products = Arrays.asList(
+				new Product("1", "Card", "Cards description"),
+				new Product("2", "Account", "Account description"));
 		
-		List<Customer> customers = Arrays.asList(
-				new Customer("1", "Daniel", "Fernandez", "30"),
-				new Customer("2", "Jose", "Fernandez", "40"));
-		
-		when(customerService.getAll())
-			.thenReturn(customers);
+		when(productService.getAll())
+			.thenReturn(products);
 			
 		mvc.perform(
-				get("/v1/customer")
+				get("/v1/product")
 				.accept(MediaType.APPLICATION_JSON_UTF8)
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id", is("1")))
-            .andExpect(jsonPath("$[0].name", is("Daniel")))
+            .andExpect(jsonPath("$[0].name", is("Card")))
             .andExpect(jsonPath("$[1].id", is("2")))
-            .andExpect(jsonPath("$[1].name", is("Jose")));
+            .andExpect(jsonPath("$[1].name", is("Account")));
 	}
-	
+
 }

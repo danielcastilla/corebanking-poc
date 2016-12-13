@@ -7,15 +7,9 @@
   
   <description>Corebanking project with Spring boot</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.2.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-
 	<modules>
 		<module>customer-ms</module>
+		<module>product-ms</module>
 	</modules>
 	
 	<build>
@@ -138,9 +132,6 @@
 			</execution>
 		</executions>
 	</plugin>
-		
-		
 		</plugins>
 	</build>
-	
 </project>
