@@ -67,17 +67,6 @@ private static final String CUSTOMER_JSON = "{ \"name\":\"Jose\", \"surname\":\"
 		
 	}
 
-	@Test
-	public void whenExistingCustomer_isDeleted() throws Exception{
-		when(customerService.deleteById(any()))
-			.thenReturn(new String("1"));
-		
-		mvc.perform(
-				delete("/v1/customer/1")
-				.accept(MediaType.APPLICATION_JSON_UTF8)
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
-	}
 
 	@Test
 	public void whenExistingCustomer_returnAll() throws Exception{

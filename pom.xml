@@ -7,6 +7,11 @@
   
   <description>Corebanking project with Spring boot</description>
 
+	<properties>
+	        <jacoco.agent.argLine />
+	
+	</properties>
+	
 	<modules>
 		<module>customer-ms</module>
 		<module>product-ms</module>
@@ -14,12 +19,18 @@
 	
 	<build>
 		<plugins>
+		<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.4.2.RELEASE</version>
+			</plugin>
+		
 		<!-- Plugin used to send coverage info to https://coveralls.io -->
-	<plugin>
-		<groupId>org.eluder.coveralls</groupId>
-		<artifactId>coveralls-maven-plugin</artifactId>
-		<version>4.1.0</version>				
-	</plugin>
+		<plugin>
+			<groupId>org.eluder.coveralls</groupId>
+			<artifactId>coveralls-maven-plugin</artifactId>
+			<version>4.1.0</version>				
+		</plugin>
 
 	<plugin>
 		<artifactId>maven-failsafe-plugin</artifactId>
@@ -132,11 +143,6 @@
 				</execution>
 			</executions>
 		</plugin>
-		<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>1.4.2.RELEASE</version>
-			</plugin>
 		</plugins>
 	</build>
 </project>
