@@ -5,7 +5,7 @@
 
 Ejemplo de microservicios con:
 
-Spring Boot 1.4.2-RELEASE
-Spring Data MongoDB 1.9.5-RELEASE
-Travis para CI
-Jacoco y Coverall para la cobertura
+Spring Boot 1.4.2-RELEASE  
+Spring Data MongoDB 1.9.5-RELEASE  
+Travis para CI  
+Jacoco y Coverall para la cobertura  
