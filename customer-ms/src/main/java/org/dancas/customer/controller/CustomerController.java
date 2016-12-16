@@ -36,4 +36,9 @@ public class CustomerController {
 		return new ResponseEntity<List<Customer>> (customers, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="{id}", method=RequestMethod.DELETE)
+	public ResponseEntity deleteById(@PathVariable String id){		
+		return new ResponseEntity (customerService.deleteById(id), HttpStatus.OK);
+	}
+	
 }
